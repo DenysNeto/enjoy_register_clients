@@ -160,7 +160,7 @@ app.get("/customer/:id", async (req, res) => {
   console.log("REQ_CUSTOMER_ID", req.params.id);
 
   const database = mongoClient.db("lazer");
-  const customers = database.collection("customers");
+  const customers = database.collection("users");
 
   let curentCustomer = customers.find({ _id: new ObjectId(req.params.id) });
   // //console.log("ALL_CUSTOMERS", allCustomers);
@@ -175,10 +175,10 @@ app.get("/customer/:id", async (req, res) => {
 
 app.put("/customer/:id", async (req, res) => {
   // TODO ADD DELETE PHOTOS
-  console.log("UPDATE_PAYLOAD", req.body);
+  console.log("UPDATE_PAYLOADQQ", req.body, req.params.id);
   try {
     const database = mongoClient.db("lazer");
-    const customers = database.collection("customers");
+    const customers = database.collection("users");
     let resultUpdate = await customers.updateOne(
       { _id: new ObjectId(req.params.id) },
       { $set: { ...req.body } }
@@ -189,7 +189,7 @@ app.put("/customer/:id", async (req, res) => {
     }
 
     console.log("AFTER_UPDATE", resultUpdate);
-    res.status(200).send({ message: "Удалено успешно!", status: 200 });
+    res.status(200).send({ message: "Клиент обновлён успешно!", status: 200 });
   } catch (err) {
     console.log("ERROR_DELETE", err);
     res.status(500).send({
@@ -203,7 +203,7 @@ app.delete("/customer/:id", async (req, res) => {
   console.log("REQ_CUSTOMER_ID_DELETE", req.params.id);
   try {
     const database = mongoClient.db("lazer");
-    const customers = database.collection("customers");
+    const customers = database.collection("users");
     await customers.updateOne(
       {
         _id: new ObjectId(req.params.id),
@@ -293,13 +293,38 @@ app.get("/photos/:name", download);
 // TODO ADD EXAMPLE for search
 // FINISH WITH EXAMPLE GET IMAGE
 
+//TODO ADDTO UTILS
+async function isUserExists(collection, payload) {
+  var myDocument = await collection.findOne(payload);
+  console.log("MY_DOCUMENT", myDocument);
+  if (myDocument) {
+    return true;
+  }
+  return false;
+}
+
 app.post("/addUser", async function (req, res) {
   try {
     await uploadFilesMiddleware(req, res);
     const database = mongoClient.db("lazer");
+
     // TODO EXAMPLE ADD INDEX
     database.collection("users").createIndex({ location: 1 });
     const customers = database.collection("users");
+
+    let isDuplicate = await isUserExists(customers, {
+      name: req.body.name,
+      "last-name": req.body["last-name"],
+    });
+
+    if (isDuplicate) {
+      res.status(200).send({
+        status: 200,
+        message: "Пользователь уже существует",
+      });
+      return;
+    }
+
     let aa = req.body;
     aa.photos = req.files.map((el) => el.filename);
 

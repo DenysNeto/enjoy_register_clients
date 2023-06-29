@@ -200,8 +200,9 @@
         </div>
 
     </form>
-    <button on-click="@this.clickSubmit()" style="width:100%; margin-top:1rem" type="button" is="coral-button" id="btn-submit"> Изменить</button>
-    </div> -->
+        <button on-click="@this.clickSubmit()" style="width:100%; margin-top:1rem" type="button" is="coral-button" id="btn-submit"> Изменить</button>
+    </div> 
+    <coral-toast id="editCustomerToast"></coral-toast>
 
         `,
                             data: { customerData : {}  ,  user : JSON.parse(localStorage.getItem("user"))  },
@@ -221,7 +222,7 @@
                                         "whatsapp-number": { type: ["string", "null"] },
                                         "phone-number": { type: ["string", "null"] },
                                         "date-of-birth": { type: ["string", "null"] },
-                                        "procedures": { type: ["string", "array"], enum: ["eyelashes", "laser_epilation"] },
+                                        "procedures": { type: ["string", "array"], enum: ["eyelashes", "laser_epilation" , "electrolysis" ] },
                                         "description": { type: "string" }
                                     },
                                     required: ["name", "last-name", "procedures"],
@@ -247,7 +248,8 @@
                                     })
                                     .then((data) => {
                                         console.log("DATA_WORKERS", data);
-                                        this.set("options", data.workers || [])
+                                        document.getElementById("editCustomerToast").querySelector("coral-toast-content").innerText = data.message;
+                                        document.getElementById("editCustomerToast").show()
 
                                     });
 

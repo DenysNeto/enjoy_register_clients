@@ -204,7 +204,7 @@ Ractive.components["nav-c"] = Ractive.extend({
 });
 
 Ractive.components["card-c"] = Ractive.extend({
-  data: { src: "", description: "descr", timestamp: "time" },
+  data: { src: "", description: "", timestamp: "time" },
   template: `      
   <div id="added_photo">
             <div style="display:flex; padding: 10px; border: 1px dashed rgb(150, 150, 150);margin-top:10px;flex-direction: column;justify-content: center;align-items: center;">

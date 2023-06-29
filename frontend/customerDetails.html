@@ -73,6 +73,8 @@
 
                 ractive.set("photos", photos)
                 ractive.set("personal"  ,  personal )
+                ractive.set("dataFull", data)
+            
             });
 
 
@@ -125,7 +127,7 @@
     <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
       <div class="accordion-body">
         {{#each photos}}
-            <card-c src="{{this.src}}">
+            <card-c src="{{this.src}}" timestamp="{{dataFull.timestamp}}" description="{{dataFull.description}}" >
         {{/each}}  
       </div>
     </div>
@@ -149,7 +151,7 @@
 </div>
        
         `,
-            data: { photos: [] ,  personal : [] }
+            data: { photos: [] ,  personal : [] , dataFull : {} }
         });
 
 
