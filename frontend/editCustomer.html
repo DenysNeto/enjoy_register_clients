@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Adjust version accordingly -->
+    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js"
+        data-coral-icons-external="js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.min.js"
+        integrity="sha512-U2SW9Ihh3GF6F8gP8QgLS+I244xnM5pFCh3cigpw7bAzUDnKDlxdlFL4kjyXTle8SJl/tJ0gdnwd44Eb3hLG/Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ractive/1.4.2/ractive.min.js"
+        integrity="sha512-UU/Ei0ZsTSuTyn6OiX4SODfkUxsCXTy2RSjsqSxDRHiWeF+JByhOCp1ZOXPywHhTujMUw+qZymBjwFqWdmDkTg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+            
+
+    <script src="http://localhost:4020/utils/components.js"></script>
+    <script src="http://localhost:4020/utils/redirectionManager.js"></script>
+    <script src="http://localhost:4020/utils/utils.js"></script>
+        
+        <!-- BUNDLE -->
+        
+        <script src="http://localhost:4020/utils/bundle.js"></script>
+
+
+</head>
+<body class="coral--light">
+    <div id="template"></div>
+    <script>
+        // REDIRECT IF NO USER
+        window.RedirectionManager.checkUserExists()
+              let path = window.location.pathname;
+                path = path.replace("_render", "").replace("edit_" ,  "");
+                console.log("PATH", path)
+                fetch(path,
+                    {
+                        method: "GET",
+                        headers: {},
+                    }).then((response) => {
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log("DATA", data);
+                    
+                        ractive.set("customerData" , data )
+                
+                        
+                        // TODO FINISH with photos description and timestamp
+                        // let photos = data.photos.map((el) => { return { src: `/photos/${el}` } })
+                        // let personal = [];
+                        // // exclude photos , _id
+                        // Object.keys(data).forEach(key => {
+                        //     if (key != "photos" && key != "_id" && data[key] !== "") {
+                        //         personal.push({ key: key, value: data[key] })
+                        //     }
+                        // })
+                    });
+
+                        var ractive = Ractive({
+                            target: "#template",
+                            template: `
+        <header-c/>
+        <nav-c/>
+
+        
+        
+<div id="header-menu"></div>
+
+<div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+
+      </div>
+</div>      
+
+
+    <div style="
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    padding:10px"
+    >
+    <h2>Редактировать персональные  данные клиента:</h2>
+    <form class="coral-FormGroup" id="edit-client" 
+    style="padding-top: 2rem;"
+>
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel" for="fieldLabelExample2-emailaddress">Имя :</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Имя" 
+                    name="name" value={{customerData.name}}>
+            </div>
+        </div>
+        
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Фамилия:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Фамилия" name="last-name" value={{customerData['last-name']}}>
+            </div>
+        </div>
+
+        <!-- ADD HINT HERE-->
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Ссылка на instagram:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Instagram" name="insta-ref" value={{customerData['insta-ref']}} >
+            </div>
+        </div>
+
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Ссылка на facebook:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Facebook" name="facebook-ref" value={{customerData['facebook-ref']}} >
+            </div>
+        </div>
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Ссылка на telegram:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Telegram" name="telegram-ref" value={{customerData['telegram-ref']}} >
+            </div>
+        </div>
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Номер
+                whatsapp:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="whatsapp" name="whatsapp-number"  value={{ customerData['whatsapp-number'] }}  >
+            </div>
+        </div>
+
+        <!-- MAKE SELECT FOR POLAND (DEFAULT) + another countries phonecode --> 
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Номер
+                телефона:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Номер телефона" name="phone-number" value={{customerData['phone-number']}} >
+            </div>
+        </div>
+
+        <!-- DATE PICKER-->
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Дата рождения:</label>         
+            <coral-datepicker labelledby="label1" name="date-of-birth" value={{customerData['date-of-birth']}}   ></coral-datepicker>
+        </div>
+
+
+        <!-- SELECT WORKERS -->
+        <div id="worker" class="coral-FormGroup-item">
+            {{#if user.role == "owner" && data.workers}}
+                <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Работники:</label>
+                <coral-select multiple="" name="workers">
+                {{#each options}}
+                    <coral-select-item value={{this._id}} {{#if customerData["workers"].includes(this._id)  }} selected=""  {{/if}} >
+                        {{this.name}}
+                    </coral-select-item>
+                {{/each}}
+                </coral-select>
+            {{/if}}
+        </div>
+
+        <!-- AUTOCOMPLETE LIST OF PROCEDURES-->
+    
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Список процедур:</label>
+            <coral-select multiple="" name="procedures">
+            <coral-select-item  {{#if customerData['procedures'].includes('eyelashes') }} selected="" {{/if}} value="eyelashes">
+                Ресницы/Брови
+            </coral-select-item>
+            <coral-select-item value="laser_epilation" {{#if customerData['procedures'].includes('laser_epilation') }} selected="" {{/if}} >
+                Лазерная эпиляция
+            </coral-select-item>
+            <coral-select-item value="electrolysis" {{#if customerData['procedures'].includes('electrolysis') }} selected="" {{/if}} >
+                Электроэпиляция
+            </coral-select-item>
+
+            </coral-select>
+
+  
+
+        <!--DESCRIPTION-->
+        <div class="coral-FormGroup-item">
+            <label for="fieldLabelExample2-lifestory" class="coral-FormGroup-itemLabel coral-FieldLabel--left">Доп информация о клиенте :  </label>
+            <div class="coral-FormGroup-itemField">
+                <textarea id="fieldLabelExample2-lifestory" placeholder="Инфо" name="description"
+                    is="coral-textarea"></textarea>
+            </div>
+        </div>
+
+    </form>
+    <button on-click="@this.clickSubmit()" style="width:100%; margin-top:1rem" type="button" is="coral-button" id="btn-submit"> Изменить</button>
+    </div> -->
+
+        `,
+                            data: { customerData : {}  ,  user : JSON.parse(localStorage.getItem("user"))  },
+                            clickSubmit : function () {
+                                console.log("CLICK_SUBMIT" ,  this.get("customerData"));
+                                let formEl = document.forms["edit-client"];
+                                let formData = new FormData(formEl);
+
+                                const schema = {
+                                    type: "object",
+                                    properties: {
+                                        name: { type: "string" },
+                                        "last-name": { type: "string" },
+                                        "insta-ref": { type: ["string", "null"] },
+                                        "facebook-ref": { type: ["string", "null"] },
+                                        "telegram-ref": { type: ["string", "null"] },
+                                        "whatsapp-number": { type: ["string", "null"] },
+                                        "phone-number": { type: ["string", "null"] },
+                                        "date-of-birth": { type: ["string", "null"] },
+                                        "procedures": { type: ["string", "array"], enum: ["eyelashes", "laser_epilation"] },
+                                        "description": { type: "string" }
+                                    },
+                                    required: ["name", "last-name", "procedures"],
+                                    additionalProperties: true
+                                }
+
+                                let objData = window.UtilsManager.buildObjectFromFormData(formData)
+                                let result = window.AJVManager.checkFormAndBuildErrors(schema, objData, "edit-client");
+                                if(!result) return;
+
+                                const urlEncoded = new URLSearchParams(formData).toString();
+
+                                fetch(`/customer/${this.get("customerData")._id}`,
+                                    {
+                                        method: "PUT",
+                                        headers: {
+                                          'Content-type': 'application/x-www-form-urlencoded'
+                                        },
+                                        body: urlEncoded //formData
+
+                                    }).then((response) => {
+                                        return response.json();
+                                    })
+                                    .then((data) => {
+                                        console.log("DATA_WORKERS", data);
+                                        this.set("options", data.workers || [])
+
+                                    });
+
+
+                            },
+                            oncomplete : function(){
+                                console.log("ON_COMPLETE" , this.get("user"))
+                                  if (this.get("user").role == "owner") {
+                                    let id = this.get("user")._id
+                                    fetch(`/workers/${id}`,
+                                        {
+                                            method: "GET",
+                                            headers: {},
+
+                                        }).then((response) => {
+                                            return response.json();
+                                        })
+                                        .then((data) => {
+                                            console.log("DATA_WORKERS", data);
+                                            this.set("options", data.workers || [])
+
+                                        });
+                                }
+                            }
+                        });
+
+
+
+        </script>
+    
+</body>
+</html>

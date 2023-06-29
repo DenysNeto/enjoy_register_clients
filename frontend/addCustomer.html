@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- CORAL -->
+    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js"
+        data-coral-icons-external="js"></script>
+    
+    <!-- AJV + RACTIVE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.min.js"
+        integrity="sha512-U2SW9Ihh3GF6F8gP8QgLS+I244xnM5pFCh3cigpw7bAzUDnKDlxdlFL4kjyXTle8SJl/tJ0gdnwd44Eb3hLG/Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ractive/1.4.2/ractive.min.js"
+        integrity="sha512-UU/Ei0ZsTSuTyn6OiX4SODfkUxsCXTy2RSjsqSxDRHiWeF+JByhOCp1ZOXPywHhTujMUw+qZymBjwFqWdmDkTg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    
+    
+    <!-- BOOTSTRAP -->
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    
+    
+    <!-- DATEPICKER -->
+    <script src="
+                    https://cdn.jsdelivr.net/npm/air-datepicker@3.3.5/air-datepicker.min.js
+                    "></script>
+    
+    <link href="
+                    https://cdn.jsdelivr.net/npm/air-datepicker@3.3.5/air-datepicker.min.css
+                    " rel="stylesheet">
+    
+    
+    <script src="http://localhost:4020/utils/components.js"></script>
+    <script src="http://localhost:4020/utils/redirectionManager.js"></script>
+    <script src="http://localhost:4020/utils/utils.js"></script>
+
+
+    <!-- BUNDLE -->
+
+    <script src="http://localhost:4020/utils/bundle.js"></script>
+
+ 
+
+
+
+</head>
+
+<body class="coral--light" >
+
+
+
+
+<style>
+    .fileUpload-dropZone {
+        border: 1px dashed rgb(150, 150, 150);
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+
+<div id="header-menu"></div>
+<div id="nav"></div>
+
+    <div style="
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    padding:10px"
+    ">
+    <h2>Загрузите фото клиента:</h2>
+        <div id="fileupload" style="padding-bottom: 2rem;"></div>
+        <hr class="coral-Divider--L">
+    <h2>Заполните персональные  данные клиента:</h2>
+    <form class="coral-FormGroup" id="new-client" 
+    style="padding-top: 2rem;"
+>
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel" for="fieldLabelExample2-emailaddress">Имя :</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Имя"
+                    name="name">
+            </div>
+        </div>
+        
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Фамилия:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Фамилия" name="last-name">
+            </div>
+        </div>
+
+        <!-- ADD HINT HERE-->
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Ссылка на instagram:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Instagram" name="insta-ref">
+            </div>
+        </div>
+
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Ссылка на facebook:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Facebook" name="facebook-ref">
+            </div>
+        </div>
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Ссылка на telegram:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Telegram" name="telegram-ref">
+            </div>
+        </div>
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Номер
+                whatsapp:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="whatsapp" name="whatsapp-number">
+            </div>
+        </div>
+
+        <!-- MAKE SELECT FOR POLAND (DEFAULT) + another countries phonecode --> 
+
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Номер
+                телефона:</label>
+            <div class="coral-FormGroup-itemField">
+                <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Номер телефона" name="phone-number">
+            </div>
+        </div>
+
+        <!-- DATE PICKER-->
+        <div id="birth" class="coral-FormGroup-item"> 
+        </div>
+
+        <div id="worker" class="coral-FormGroup-item"></div>
+
+        <!-- AUTOCOMPLETE LIST OF PROCEDURES-->
+    
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Список процедур:</label>
+            <coral-select multiple="" name="procedures">
+            <coral-select-item value="eyelashes">
+                Ресницы
+            </coral-select-item>
+            <coral-select-item value="laser_epilation">
+                Лазерная эпиляция
+            </coral-select-item>
+            <coral-select-item value="electrolysis">
+                Электроэпиляция
+            </coral-select-item>
+            </coral-select>
+
+        <!--DESCRIPTION-->
+        <div class="coral-FormGroup-item">
+            <label for="fieldLabelExample2-lifestory" class="coral-FormGroup-itemLabel coral-FieldLabel--left">Доп информация о клиенте :  </label>
+            <div class="coral-FormGroup-itemField">
+                <textarea rows="4"  style="resize:none"   id="fieldLabelExample2-lifestory" placeholder="Инфо" name="description"
+                    is="coral-textarea"></textarea>
+            </div>
+        </div>
+    </form>
+
+    <button style="width:100%; margin-top:1rem" type="button" is="coral-button" id="btn-submit">Добавить</button>
+    <coral-toast id="addCustomerToast">A</coral-toast>
+    </div>
+
+
+
+<script>
+        window.RedirectionManager.checkUserExists()
+
+        Ractive({
+            target: "#header-menu",
+            template: `<header-c /> `,
+        });
+
+        Ractive({
+            target: "#nav",
+            template: `<nav-c /> `,
+        });
+
+        Ractive({
+                target: "#birth",
+                template: `<calendar-c /> `,
+            });
+
+        Ractive({
+            target: "#fileupload",
+            template: `<fileupload-c /> `,
+            data: { greeting: 'Hello', name: 'world' }
+        });
+
+        var inputWorker  = Ractive({
+                target: "#worker",
+                data : {options : [{name : "HHH" , _id:"111qqqq"  } ,  { name: "BBB", _id: "222qqqq" }] ,   user: JSON.parse(localStorage.getItem("user"))   },
+                template: ` 
+                {{#if user.role=="owner"}}
+                <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Работники:</label>
+                <coral-select multiple="" name="workers">
+                {{#each options}}
+                    <coral-select-item value={{this._id}}>
+                        {{this.name}}
+                    </coral-select-item>
+                {{/each}}
+                </coral-select>
+                {{/if}}
+                `,
+                onrender: function () {
+                        if(this.get("user").role == "owner")
+                        {
+                            let id = JSON.parse(localStorage.getItem("user"))._id
+                            fetch(`/workers/${id}`,
+                                {
+                                    method: "GET",
+                                    headers: {},
+
+                                }).then((response) => {
+                                    return response.json();
+                                })
+                                .then((data) => {
+                                    console.log("DATA_WORKERS", data);
+                                    this.set("options", data.workers)
+                                });
+                        }
+                }
+            }, 
+            );
+    </script>
+
+
+    <script>
+
+        let objData = {}
+        let btn = document.getElementById("btn-submit");
+        console.log("BTN" ,  btn)
+// TODO finish 
+             
+        btn.addEventListener("click" ,  ()=>{
+            let formEl = document.forms["new-client"];
+            let formData = new FormData(formEl);
+            for (const pair of formData.entries()) {
+                if(pair[1] != "")
+                {
+                    objData[pair[0]] = pair[1]
+                }
+                
+                console.log(`${pair[0]}, ${pair[1]}`);
+            }
+                console.log("OBJ_DATA", objData);  
+
+           const schema = {
+                type: "object",
+                properties: {
+                    name: { type: "string" },
+                    "last-name": { type: "string" },
+                    "insta-ref": { type: ["string", "null"] },
+                    "facebook-ref": { type: ["string", "null"] },
+                    "telegram-ref": { type: ["string", "null"] },
+                    "whatsapp-number": { type: ["string", "null"] },
+                    "phone-number": { type: ["string", "null"] },
+                    "date-of-birth": { type: ["string", "null"] },
+                    "procedures": { type: ["string", "array"], enum: ["eyelashes", "laser_epilation"] },
+                    "description": { type: "string" }
+                },
+                required: ["name", "last-name", "procedures"],
+                additionalProperties: true
+            }
+      
+
+
+
+                // VALIDATION 
+
+               
+
+               let result =   window.AJVManager.checkFormAndBuildErrors(schema , objData  , "new-client");
+               if(!result) return 
+
+               console.log("RESULT" , result)
+
+              
+
+            let allFiles = [];
+            let descriptions = {}
+
+            // BUILD FILES
+            if(window.files && window.files.get().files && window.files.get().files.length  )
+            {
+                allFiles = (window.files.get().files || []).map(el => el.file);
+                window.files.get().files.forEach(el => descriptions[el.file.name] = { description: el.description, time: el.time })
+                console.log("DESCRIPTIONS", descriptions);
+            }
+       
+            // ADD MANAGMENT DATA
+            let user = JSON.parse(localStorage.getItem("user"));
+            let userId = user._id
+
+            if(user.role == "worker")
+            {
+                formData.append("workers", userId )
+            }
+
+            formData.append("added_by", userId )
+            formData.append("role", "customer")
+            formData.append("company", user.company_name)
+            formData.append("status", "active")
+          
+            
+
+            // ADD FILES
+            if(allFiles.length)
+            {
+                formData.append("metadata_photo", JSON.stringify(descriptions))
+                allFiles.forEach(el => formData.append("files", el))
+            }
+    
+
+            // TODO FINISH
+            fetch("/addUser",
+                {
+                    method: "POST",
+                    headers: {},
+                    body: formData //formData
+                }).then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    document.getElementById("addCustomerToast").querySelector("coral-toast-content").innerText = data.message;
+                    document.getElementById("addCustomerToast").show()
+
+                    
+                });
+        })
+
+    </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script> 
+
+
+
+// EXAMPLE DIVIDE BLOCKS
+let array = [1,2,3,4,5,6,7,8,9,10]
+
+let divider = 2;
+let newArray = [];
+   let index = true;
+   while (index)
+   {
+    let startIndex =  newArray.length // newArray.length ? newArray.length + 1 : newArray.length
+    let arrayEl =  array.slice(startIndex * divider  , startIndex * divider + divider)
+    if (arrayEl.length == divider){
+        newArray.push(arrayEl)
+   }
+   else {
+    index = false
+   }}
+
+console.log("NEW_ARRAY" ,  newArray)
+
+
+
+    // EXAMPLE COUNT HOW MANY TIMES
+    function getOccurrence(array, value) {
+            var count = 0;
+            array.forEach((v) => (v === value && count++));
+            return count;
+        }
+    var arr = [2, 3, 1, 3, 4, 5, 3, 1];    
+    let setNumbers = Array.from(new Set(arr));
+    let result =  setNumbers.map(el=> {  return {value : getOccurrence(arr, el) , key : el , valuePercentage : getOccurrence(arr, el) / arr.length  * 100  }  })
+    console.log("RESULT" , result)
+    
+    </script>
+
+
+</head>
+<body>
+    
+</body>
+</html>

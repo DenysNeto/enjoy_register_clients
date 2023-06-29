@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Adjust version accordingly -->
+    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js"
+        data-coral-icons-external="js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.min.js"
+        integrity="sha512-U2SW9Ihh3GF6F8gP8QgLS+I244xnM5pFCh3cigpw7bAzUDnKDlxdlFL4kjyXTle8SJl/tJ0gdnwd44Eb3hLG/Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ractive/1.4.2/ractive.min.js"
+        integrity="sha512-UU/Ei0ZsTSuTyn6OiX4SODfkUxsCXTy2RSjsqSxDRHiWeF+JByhOCp1ZOXPywHhTujMUw+qZymBjwFqWdmDkTg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+            
+
+    <script src="http://localhost:4020/utils/components.js"></script>
+    <script src="http://localhost:4020/utils/utils.js"></script>
+    <script src="http://localhost:4020/utils/redirectionManager.js"></script>
+
+        <!-- BUNDLE -->
+        
+        <script src="http://localhost:4020/utils/bundle.js"></script>
+
+
+</head>
+<body class="coral--light">
+    <div id="template"></div>
+
+    <script>
+
+        if(localStorage.getItem("user"))
+        {
+            let objData =  localStorage.getItem("user");
+                fetch("/login",
+                {
+                    method: "POST",
+                    headers: {},
+                    body: objData //formData
+                }).then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    window.location.href = `/main_page_render`;
+                });
+           // window.location.href = `/main_page_render`;
+        }
+
+                               var ractive = Ractive({
+                                    target: "#template",
+                                    data : { notificationMessage : "" },
+                                    template: `
+                                     <header-c/>
+
+    <div style="display: flex;justify-content: space-between;flex-direction: column;align-items: center;padding:10px">
+                <h2>Войти в систему</h2>
+                <form id="login" class="coral-FormGroup coral-FormGroup--labelsAbove">
+                    <div class="coral-FormGroup-item">
+                        <label for="fieldLabelExample-lifestory" class="coral-FormGroup-itemLabel">Логин </label>
+                        <div class="coral-FormGroup-itemField">
+                               <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Логин" name="login">
+                        </div>
+                    </div>
+                    <div class="coral-FormGroup-item">
+                        <label for="fieldLabelExample-lifestory" class="coral-FormGroup-itemLabel">Пароль </label>
+                        <div class="coral-FormGroup-itemField">
+                               <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Пароль" type="password" name="password">
+                        </div>
+                    </div>
+                </form>
+                <button style=" margin-top:1rem" type="button" is="coral-button" id="btn-submit">Войти</button>    
+    </div>
+    <coral-toast id="defaultToast">{{notificationMessage}}</coral-toast>            
+                `})
+
+                  let objData = {}
+                    let btn = document.getElementById("btn-submit");
+
+                    btn.addEventListener("click", () => {
+                        let formEl = document.forms["login"];
+                        let formData = new FormData(formEl);
+                        let schema = {
+                            type: "object",
+                            properties: {
+                                login: { type: "string" },
+                                "password": { type: "string" },
+                            },
+                            required: ["login" ,  "password"],
+                            additionalProperties: true
+                        }
+
+                        let objData = window.UtilsManager.buildObjectFromFormData(formData )    
+                        let result = window.AJVManager.checkFormAndBuildErrors(schema, objData, "login");
+                        if (!result) return 
+
+                        const urlEncoded = new URLSearchParams(formData).toString();
+
+                        // TODO FINISH
+                        fetch("/login?" + urlEncoded,
+                            {
+                                method: "GET",
+                                headers: {},
+                            }).then((response) => {
+                                return response.json();
+                            })
+                            .then((data) => {
+                                ractive.set("notificationMessage" , data.message  )
+                                document.getElementById("defaultToast").show()
+                                if(data.user)
+                                {
+                                    localStorage.setItem('user', JSON.stringify(data.user));
+                                }
+                                window.location.href = `/main_page_render`;
+                            });
+                    })
+        </script>
+</body>
+</html>

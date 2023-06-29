@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Adjust version accordingly -->
+    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js"
+        data-coral-icons-external="js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.min.js"
+        integrity="sha512-U2SW9Ihh3GF6F8gP8QgLS+I244xnM5pFCh3cigpw7bAzUDnKDlxdlFL4kjyXTle8SJl/tJ0gdnwd44Eb3hLG/Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ractive/1.4.2/ractive.min.js"
+        integrity="sha512-UU/Ei0ZsTSuTyn6OiX4SODfkUxsCXTy2RSjsqSxDRHiWeF+JByhOCp1ZOXPywHhTujMUw+qZymBjwFqWdmDkTg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+            
+
+    <script src="http://localhost:4020/utils/components.js"></script>
+    <script src="http://localhost:4020/utils/redirectionManager.js"></script>
+
+
+</head>
+<body class="coral--light">
+
+    <div id="template"></div>
+
+    
+
+
+<script>
+
+
+            // REDIRECT IF NO USER
+            window.RedirectionManager.checkUserExists()
+     
+
+            // ADD QUERIES 
+
+
+// TODO finish with query
+function getAllRecords(query){
+    let user =  JSON.parse(localStorage.getItem("user"))
+    let queryObj = {}
+    if (user.role == "owner") {
+        queryObj.role="customer"
+    }
+    if (user.role == "worker") {
+        queryObj.role = "customer"
+        queryObj.added_by = user._id
+    }
+
+
+     const urlEncoded = new URLSearchParams(queryObj).toString();
+
+     console.log("ENCODED" , urlEncoded  )
+
+
+                fetch(`/customers?${urlEncoded}`,
+        {
+            method: "GET",
+            headers: {
+                // "Content-Type": "multipart/form-data",
+                // "Content-Type": "application/x-www-form-urlencoded",
+
+            },
+        }).then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            console.log("DATA", data)
+            ractive.set("customers", data)
+        });
+}
+
+
+
+function deleteCustomer(record){
+    console.log("DELETE");
+           fetch(`/customer/${record._id}`,
+        {
+            method: "DELETE",
+            headers: {
+                // "Content-Type": "multipart/form-data",
+                // "Content-Type": "application/x-www-form-urlencoded",
+
+            },
+        }).then((response) => {
+            console.log("RESPONSE" , response);
+            status =   response.status
+            return response.json();
+        })
+        .then((data) => {
+
+            console.log("DATA-DELETE ", data)
+            if(data.status == 200)
+            {
+                getAllRecords();
+                // TO DO REQUEST
+            }
+            // SHOW NOTIFICATION WITH data.message
+            ractive.set("notificationMessage" ,  data.message  )
+            document.getElementById("defaultToast").show()
+        });
+}
+
+
+function editCustomer(record) {
+        window.location.href = `/edit_customer_render/${record._id}`;
+    }
+
+function detailsCustomer(record) {
+        console.log("DETAILS" , record);
+        window.location.href = `/customer_render/${record._id}`;
+    }   
+
+function addSession(record) {
+        console.log("add_session", record);
+        window.location.href = `/add_customer_session/${record._id}`;
+    } 
+
+
+        var ractive = Ractive({
+            target: "#template",
+            template: `
+        <header-c/>
+        <nav-c/>
+        {{#if customers.length > 0}}
+            <table-c  rows={{customers}}  columns="{{tableRows}}" edit="{{edit}}" delete="{{delete}}" details="{{details}}" />
+        {{else}}
+        No customers yet.  You want to add?     
+        {{/if}}
+        <coral-toast id="defaultToast">{{notificationMessage}}</coral-toast>
+        `,
+            data: { customers: [], tableRows: [{ title: "name" } ,  { title: "date_of_birth" }]  ,  notificationMessage:"" ,  edit: editCustomer ,  delete: deleteCustomer , details: detailsCustomer , addSession : addSession  }
+        });
+
+
+        getAllRecords()
+
+
+    // GET ALL RECORDS
+
+
+
+
+</script>
+    
+</body>
+</html>

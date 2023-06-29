@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+        <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+        <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js"
+            data-coral-icons-external="js"></script>
+
+
+    <script src="
+    https://cdn.jsdelivr.net/npm/air-datepicker@3.3.5/air-datepicker.min.js
+    "></script>
+
+    <link href="
+    https://cdn.jsdelivr.net/npm/air-datepicker@3.3.5/air-datepicker.min.css
+    " rel="stylesheet">
+
+    
+
+</head>
+<body class="coral--light" >
+
+    <input id="el"  is="coral-textfield" aria-invalid="false" type="text" placeholder="Пароль"
+        name="password">
+        <button id="btn-calendar" is="coral-button" class=" _coral-InputGroup-button _coral-FieldButton"  aria-label="home" icon="calendar"> </button>
+
+        <!-- <button is="coral-button" tracking="off" variant="_custom" class=" _coral-InputGroup-button _coral-FieldButton"
+            type="button" handle="toggle" aria-haspopup="dialog" aria-label="Calendar" title="Calendar" aria-expanded="false"
+            aria-controls="coral-id-0" size="M"><coral-icon icon="calendar" role="img" iconsize="S"
+                class="u-coral-noMargin _coral-Icon _coral-Icon--sizeS" handle="icon" size="S" aria-hidden="true">
+                <svg focusable="false" aria-hidden="true" class="_coral-Icon--svg _coral-Icon">
+                    <use xlink:href="../resources/spectrum-icons.svg#spectrum-icon-18-Calendar"></use>
+                </svg>
+            </coral-icon><coral-button-label></coral-button-label></button> -->
+
+    
+ 
+
+
+    <script>
+      let rr =   new AirDatepicker('#el', {
+        autoClose: true,
+        isMobile: true,
+        autoClose: true,
+  
+        })
+
+        let btn =  document.getElementById("btn-calendar")
+        btn.addEventListener("click" ,  ()=>{
+            rr.show()
+        })
+
+        // rr.show()
+        </script>
+    
+</body>
+</html>

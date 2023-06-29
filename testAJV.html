@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.min.js"
+            integrity="sha512-U2SW9Ihh3GF6F8gP8QgLS+I244xnM5pFCh3cigpw7bAzUDnKDlxdlFL4kjyXTle8SJl/tJ0gdnwd44Eb3hLG/Q=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <form id="form">
+        <input  placeholder="First" name="first">
+        <input is="coral-textfield" aria-invalid="false" type="text" placeholder="Second" name="second">
+    </form>
+
+    <script>
+        const ajv = new ajv7({ allErrors: true }) // options can be passed, e.g. {allErrors: true}
+
+    const schema = {
+        type: "object",
+        properties: {
+            first: { type: "string" },
+            second: { type: "string" }
+        },
+        required: ["first" , "second"],
+        additionalProperties: true,
+
+    }
+
+    const validate = ajv.compile(schema)
+
+    const data = {
+        second: 10
+    }
+
+
+    const valid = validate(data)
+
+    if (!valid)  {
+        console.log(validate.errors)
+
+        // REMOVE PREV ERRORS
+        // BUILD AGAIN
+        
+     addErrors( "form" ,  validate.errors)
+
+
+        validate.errors.forEach(error=>{
+
+        
+        })
+
+
+    } 
+
+    function addErrors (formId , errors) {
+        let formEl = document.forms[formId];
+        let formData = new FormData(formEl);
+        let allFields = []
+        let allDivs = []
+
+        function insertAfter(referenceNode, newNode) {
+            referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+        }
+
+        for (const pair of formData.entries()) {
+            allFields.push(pair[0])
+        }
+
+        // REMOVE ALL 
+        let errorsLabels =  formEl.querySelectorAll("errors-div");
+        errorsLabels.forEach(el=> el.remove())
+
+        allFields.forEach(field => {
+            let elem = formEl.querySelector(`[name=${field}]`)
+            if (elem) {
+                elem.removeAttribute("error")
+            }
+        })
+
+        // ADD ERRORS
+
+
+        function getErrorField (error) {
+            if(error.keyword == "required")
+            {
+                return error.params.missingProperty
+            }
+            if(error.keyword == "type")
+            {
+                return error.instancePath || error.dataPath
+
+            }
+            return  ""
+        }
+
+        errors.forEach(error=>{
+            let errorName =  getErrorField(error).replace("/", "");
+            if(allFields.includes(errorName) )
+            {
+                 let elem = formEl.querySelector(`[name=${errorName}]`);
+                 elem.setAttribute("denis" , "bla")
+                 let newNode = document.createElement("div")
+                 newNode.classList.add("mystyle");
+                 newNode.innerHTML = error.message
+                 insertAfter(elem, newNode)
+            }
+        })
+    }
+
+      
+  
+
+        </script>
+    
+</body>
+</html>

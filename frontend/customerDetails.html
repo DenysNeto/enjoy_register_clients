@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Adjust version accordingly -->
+    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js"
+        data-coral-icons-external="js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.min.js"
+        integrity="sha512-U2SW9Ihh3GF6F8gP8QgLS+I244xnM5pFCh3cigpw7bAzUDnKDlxdlFL4kjyXTle8SJl/tJ0gdnwd44Eb3hLG/Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ractive/1.4.2/ractive.min.js"
+        integrity="sha512-UU/Ei0ZsTSuTyn6OiX4SODfkUxsCXTy2RSjsqSxDRHiWeF+JByhOCp1ZOXPywHhTujMUw+qZymBjwFqWdmDkTg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+
+
+    <script src="http://localhost:4020/utils/components.js"></script>
+    <script src="http://localhost:4020/utils/redirectionManager.js"></script>
+
+
+</head>
+
+<body class="coral--light">
+
+    <div  id="template"></div>
+
+
+
+    <script>
+        // REDIRECT IF NO USER
+        window.RedirectionManager.checkUserExists()
+
+
+        let path = window.location.pathname;
+        path = path.replace("_render", "");
+        console.log("PATH", path)
+
+        fetch(path,
+            {
+                method: "GET",
+                headers: {
+                    // "Content-Type": "multipart/form-data",
+                    // "Content-Type": "application/x-www-form-urlencoded",
+
+                },
+            }).then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                console.log("DATA", data)
+                // TODO FINISH with photos description and timestamp
+                let photos = data.photos.map((el) =>  {return { src: `/photos/${el}` }})
+                let personal = [];
+                // exclude photos , _id
+                Object.keys(data).forEach(key=>{
+                    if(key != "photos" && key != "_id" && data[key] !== "")
+                    {
+                        personal.push({key : key ,  value : data[key]})
+                    }
+                })
+
+                ractive.set("photos", photos)
+                ractive.set("personal"  ,  personal )
+            });
+
+
+        var ractive = Ractive({
+            target: "#template",
+            template: `
+        <header-c/>
+        <nav-c/>
+
+<div class="accordion" id="accordionExample">
+  <!-- PERSONAL INFO -->  
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        Персональные данные клиента:
+      </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+            {{#each personal }}
+                    <div class="coral-Well">
+                        <div style="display:flex">
+                            <div style="width:50%">
+                                {{this.key}}
+                            </div>
+                            <div>
+                                {{#if Array.isArray(this.value)}}
+                                    {{#each this.value}}
+                                    <coral-tag color="green">{{this}}</coral-tag>
+                                    {{/each}}
+                                {{else}}
+                                    {{this.value}}
+                                {{/if}}
+                              
+                            </div>
+                        </div>
+                    </div>
+            {{/each}}
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTOS -->
+  <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Загруженные фото клиента:
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        {{#each photos}}
+            <card-c src="{{this.src}}">
+        {{/each}}  
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FUTURE ZAPISI -->
+    <div class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+        Записи  клиента:
+      </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+    ZAPIS KLIENTA TYT  
+      </div>
+    </div>
+  </div>
+
+</div>
+       
+        `,
+            data: { photos: [] ,  personal : [] }
+        });
+
+
+
+
+    </script>
+
+</body>
+
+
+
+</html>
