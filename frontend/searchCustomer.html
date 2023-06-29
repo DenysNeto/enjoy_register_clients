@@ -141,7 +141,7 @@ function addSession(record) {
         {{/if}}
         <coral-toast id="defaultToast">{{notificationMessage}}</coral-toast>
         `,
-            data: { customers: [], tableRows: [{ title: "name" } ,  { title: "date_of_birth" }]  ,  notificationMessage:"" ,  edit: editCustomer ,  delete: deleteCustomer , details: detailsCustomer , addSession : addSession  }
+            data: { customers: [], tableRows: [{ title: "name" ,  rowsTemplate: "{{name}}  {{row['last-name']}}" }  ]  ,  notificationMessage:"" ,  edit: editCustomer ,  delete: deleteCustomer , details: detailsCustomer , addSession : addSession  }
         });
 
 

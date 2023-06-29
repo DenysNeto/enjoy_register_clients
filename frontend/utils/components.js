@@ -1,5 +1,3 @@
-Ractive.components[""];
-
 Ractive.components["fileupload-c"] = Ractive.extend({
   // this will be applied to all Slideshow instances
   template: `<coral-fileupload name="file" async="" id="fileUpload" 
@@ -109,7 +107,7 @@ Ractive.components["fileupload-c"] = Ractive.extend({
 
 Ractive.components["table-c"] = Ractive.extend({
   data: {
-    columns: [{ title: "name" }, { title: "date_of_birth" }],
+    columns: [{ title: "name", rowsTemplate: "{{name}} {{last_name}}" }],
     rows: [{ name: "aaaa", date_of_birth: "aaaaaaxxxx" }],
   },
   template: `  <table is="coral-table" variant="quiet">
@@ -126,7 +124,12 @@ Ractive.components["table-c"] = Ractive.extend({
           <tr is="coral-table-row">
           {{#each columns as column}}
             <td is="coral-table-cell" role="rowheader">
-              {{row[column.title]}}
+            {{#if this['rowsTemplate']}}
+                {{>{template : this['rowsTemplate'] }}}
+            {{else}}
+                {{row[column.title]}}
+            {{/if}}
+          
             </td>
           {{/each}}
             <td is="coral-table-cell" role="rowheader">
@@ -167,12 +170,13 @@ Ractive.components["table-c"] = Ractive.extend({
 });
 
 Ractive.components["header-c"] = Ractive.extend({
+  data: { path: "./" },
   template: `<div style="background-color: white;display: flex;border-bottom: 1px solid;" >
    <div>
-        <img style="height:8vh" src="http://localhost:4020/assets/logo_element_transparent.png">
+        <img style="height:8vh" src="{{path + 'assets/logo_element_transparent.png'}}">
     </div>
     <div>
-<img style="height:8vh" src="http://localhost:4020/assets/writting_transparent.png">
+<img style="height:8vh" src="{{path + 'assets/writting_transparent.png'}}">
     </div>       
 </div>    
 `,

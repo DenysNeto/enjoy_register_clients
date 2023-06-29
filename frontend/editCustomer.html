@@ -25,13 +25,13 @@
             crossorigin="anonymous"></script>
             
 
-    <script src="http://localhost:4020/utils/components.js"></script>
-    <script src="http://localhost:4020/utils/redirectionManager.js"></script>
-    <script src="http://localhost:4020/utils/utils.js"></script>
+    <script src="../utils/components.js"></script>
+    <script src="../utils/redirectionManager.js"></script>
+    <script src="../utils/utils.js"></script>
         
         <!-- BUNDLE -->
         
-        <script src="http://localhost:4020/utils/bundle.js"></script>
+        <script src="../utils/bundle.js"></script>
 
 
 </head>
@@ -52,7 +52,7 @@
                     })
                     .then((data) => {
                         console.log("DATA", data);
-                    
+        
                         ractive.set("customerData" , data )
                 
                         
@@ -70,7 +70,7 @@
                         var ractive = Ractive({
                             target: "#template",
                             template: `
-        <header-c/>
+        <header-c path="../"/>
         <nav-c/>
 
         
