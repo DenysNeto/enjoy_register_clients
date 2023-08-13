@@ -9,6 +9,9 @@ const GridFSBucket = require("mongodb").GridFSBucket;
 
 (app = express()), (port = 4020);
 app.use(express.json());
+
+console.log("HERE");
+
 // app.use(bodyParser.json({ extended: true }));
 app.listen(port);
 app.use(express.static(__dirname));
