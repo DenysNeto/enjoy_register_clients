@@ -3,7 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-console.log("HERE");
+console.log("HERE", __dirname);
 
 // app.use(bodyParser.json({ extended: true }));
 
