@@ -19,6 +19,8 @@ app.use(express.static("assets"));
 app.use(express.static("utils"));
 app.use(express.static("frontend"));
 
+console.log("HERE2");
+
 // Enable parsing of URL-encoded data on all routes:
 app.use(
   express.urlencoded({
@@ -27,6 +29,8 @@ app.use(
     parameterLimit: 20, // Limit number of form items on payload
   })
 );
+
+console.log("HERE3");
 //TODO TEST
 //app.use(cors()); // Allows request from any IP (prevent any CORS error)
 
@@ -36,7 +40,7 @@ let dbConfig = {
   database: "lazer",
   imgBucket: "photos",
 };
-
+console.log("HERE4");
 // MONGO CONNECTION
 
 // SET FOR UPLOAD
@@ -71,15 +75,17 @@ var storage = new GridFsStorage({
   },
 });
 
+console.log("HERE5");
+
 var uploadFiles = multer({ storage: storage }).array("files", 10);
 var uploadFilesMiddleware = util.promisify(uploadFiles);
 
 let mongoConnectionFunc = async () => {
   await mongoClient.connect();
 };
-
+console.log("HERE5");
 const mongoClient = new MongoClient(dbConfig.url);
-
+console.log("HERE6");
 // download photo from server
 const download = async (req, res) => {
   try {
@@ -116,7 +122,7 @@ const download = async (req, res) => {
 mongoConnectionFunc();
 
 // RENDERING
-
+console.log("HERE8");
 app.get("/", (req, res) => {
   console.log("START_!!!");
   res.sendFile(__dirname + "/frontend/login.html");
