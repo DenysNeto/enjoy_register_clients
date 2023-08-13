@@ -118,13 +118,14 @@
                                 return response.json();
                             })
                             .then((data) => {
+                                console.log("DATA" , data)
                                 ractive.set("notificationMessage" , data.message  )
                                 document.getElementById("defaultToast").show()
                                 if(data.user)
                                 {
                                     localStorage.setItem('user', JSON.stringify(data.user));
                                 }
-                                window.location.href = `/main_page_render`;
+                                //window.location.href = `/main_page_render`;
                             });
                     })
         </script>
