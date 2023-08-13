@@ -17,17 +17,18 @@ app.use(express.static("utils"));
 app.use(express.static("frontend"));
 
 // Enable parsing of URL-encoded data on all routes:
-// app.use(
-//   express.urlencoded({
-//     extended: false, // Whether to use algorithm that can handle non-flat data strutures
-//     limit: 10000, // Limit payload size in bytes
-//     parameterLimit: 20, // Limit number of form items on payload
-//   })
-// );
+app.use(
+  express.urlencoded({
+    extended: false, // Whether to use algorithm that can handle non-flat data strutures
+    limit: 10000, // Limit payload size in bytes
+    parameterLimit: 20, // Limit number of form items on payload
+  })
+);
 //TODO TEST
 //app.use(cors()); // Allows request from any IP (prevent any CORS error)
 
 let dbConfig = {
+  //url: "mongodb://localhost:27017/",
   url: "mongodb+srv://admin:admin@cluster0.huv9vl6.mongodb.net/lazer",
   database: "lazer",
   imgBucket: "photos",
@@ -41,24 +42,28 @@ var storage = new GridFsStorage({
   options: { useNewUrlParser: true, useUnifiedTopology: true },
   file: (req, file) => {
     // TODO change the name of file to be unique
-    let fileDescription = {};
-    if (req.body.metadata_photo) {
-      let allDescriptions = JSON.parse(req.body.metadata_photo);
-      fileDescription = allDescriptions[file.originalname];
-    }
+    console.log("DWSCRIPTION", req.body.metadata_photo, file.originalname);
 
+    let allDescriptions = JSON.parse(req.body.metadata_photo);
+    let fileDescription = allDescriptions[file.originalname];
+
+    console.log("RESULT", req.body.descriptions_photo);
+
+    console.log("REQ_BODY_TEST", req.body, file);
     const match = ["image/png", "image/jpeg"];
 
     if (match.indexOf(file.mimetype) === -1) {
       const filename = `${file.originalname}`;
       return filename;
     }
+
     // GENERATE UNIQUE ID FOR PHOTO
     let id = Math.random().toString(16).slice(2);
+
     return {
       bucketName: dbConfig.imgBucket,
       filename: `${id}`,
-      metadata: { ...fileDescription },
+      metadata: fileDescription,
     };
   },
 });
@@ -71,13 +76,6 @@ let mongoConnectionFunc = async () => {
 };
 
 const mongoClient = new MongoClient(dbConfig.url);
-
-// VARIABLES
-
-// FUNCTIONS REPLACE AFTER (PUT IN CONTROLLER)
-async function getById(collection, id) {
-  return await collection.findOne({ _id: new ObjectId(id) });
-}
 
 // download photo from server
 const download = async (req, res) => {
@@ -117,8 +115,13 @@ mongoConnectionFunc();
 // RENDERING
 
 app.get("/", (req, res) => {
+  console.log("START_!!!");
   res.sendFile(__dirname + "/frontend/login.html");
 });
+
+// app.get("/add_customer_render", (req, res) => {
+//   res.sendFile(__dirname + "/frontend/index.html");
+// });
 
 app.get("/search_customer_render", (req, res) => {
   res.sendFile(__dirname + "/frontend/searchCustomer.html");
@@ -150,64 +153,46 @@ app.get("/edit_customer_render/:id", async (req, res) => {
   res.sendFile(__dirname + "/frontend/editCustomer.html");
 });
 
-app.get("/add_customer_photo_render/:id", async (req, res) => {
-  //res.sendFile(__dirname + "/frontend/search.html");
-  res.sendFile(__dirname + "/frontend/addPhoto.html");
-});
-
 // EXECUTION
 
 // CUSTOMERS
 
-app.post("/add_customer_photos/:id", async (req, res) => {
-  await uploadFilesMiddleware(req, res);
-  let reqResult = req.body;
-
-  const database = mongoClient.db("lazer");
-  const customers = database.collection("users");
-  reqResult.photos = req.files.map((el) => el.filename);
-  let resultUpdate = await customers.updateOne(
-    { _id: new ObjectId(req.params.id) },
-    { $push: { photos: { $each: reqResult.photos } } }
-  );
-
-  if (resultUpdate.matchedCount == 0) {
-    res.status(404).send({ message: "Клиент не найден!", status: 404 });
-  }
-  res.status(200).send({ message: "Фото добавленно успешно!", status: 200 });
-});
-
 app.get("/customer/:id", async (req, res) => {
-  const database = mongoClient.db("lazer");
-  const customers = database.collection("users");
-  let curentCustomer = await getById(customers, req.params.id);
-  let addedBy = await getById(customers, curentCustomer.added_by);
-  let workers = await getById(customers, curentCustomer.workers);
-  curentCustomer.added_by = `${addedBy.name} ${addedBy["last-name"]}`;
-  curentCustomer.workers = `${workers.name} ${workers["last-name"]}`;
+  console.log("REQ_CUSTOMER_ID", req.params.id);
 
-  if (!curentCustomer) {
-    res.status(400).send({ message: "Клиент не нейден!", status: 400 });
-  } else {
-    res.status(200).send(curentCustomer);
+  const database = mongoClient.db("lazer");
+  const customers = database.collection("customers");
+
+  let curentCustomer = customers.find({ _id: new ObjectId(req.params.id) });
+  // //console.log("ALL_CUSTOMERS", allCustomers);
+
+  let allDocumnets = [];
+  for await (const doc of curentCustomer) {
+    allDocumnets.push(doc);
   }
+
+  res.status(200).send(allDocumnets[0]);
 });
 
 app.put("/customer/:id", async (req, res) => {
   // TODO ADD DELETE PHOTOS
+  console.log("UPDATE_PAYLOAD", req.body);
   try {
     const database = mongoClient.db("lazer");
-    const customers = database.collection("users");
+    const customers = database.collection("customers");
     let resultUpdate = await customers.updateOne(
       { _id: new ObjectId(req.params.id) },
-      { $set: { ...req.body, updated_at: new Date().getTime() } }
+      { $set: { ...req.body } }
     );
 
     if (resultUpdate.matchedCount == 0) {
       res.status(404).send({ message: "Клиент не найден!", status: 404 });
     }
-    res.status(200).send({ message: "Клиент обновлён успешно!", status: 200 });
+
+    console.log("AFTER_UPDATE", resultUpdate);
+    res.status(200).send({ message: "Удалено успешно!", status: 200 });
   } catch (err) {
+    console.log("ERROR_DELETE", err);
     res.status(500).send({
       message: err.message,
     });
@@ -216,9 +201,10 @@ app.put("/customer/:id", async (req, res) => {
 
 app.delete("/customer/:id", async (req, res) => {
   // TODO ADD DELETE PHOTOS
+  console.log("REQ_CUSTOMER_ID_DELETE", req.params.id);
   try {
     const database = mongoClient.db("lazer");
-    const customers = database.collection("users");
+    const customers = database.collection("customers");
     await customers.updateOne(
       {
         _id: new ObjectId(req.params.id),
@@ -238,6 +224,7 @@ app.delete("/customer/:id", async (req, res) => {
 
 // Query params to get all
 app.get("/customers", async (req, res) => {
+  console.log("PARAMS", req.query.params, req.query);
   const database = mongoClient.db("lazer");
   const customers = database.collection("users");
   let allCustomers = customers.find({
@@ -249,16 +236,27 @@ app.get("/customers", async (req, res) => {
   for await (const doc of allCustomers) {
     allDocumnets.push(doc);
   }
+
   res.status(200).send(allDocumnets);
 });
 
 app.get("/login", async (req, res) => {
   try {
+    console.log("PARAMS", req.query);
     let obj = req.query;
     const database = mongoClient.db("lazer");
     const users = database.collection("users");
-    let curentUser = users.findOne(obj);
-    if (curentUser) {
+
+    console.log("OBJ", obj);
+
+    let curentUser = users.find(obj);
+    // //console.log("ALL_CUSTOMERS", allCustomers);
+    let allDocumnets = [];
+    for await (const doc of curentUser) {
+      allDocumnets.push(doc);
+    }
+    console.log("RESULT_LOGIN", allDocumnets[0]);
+    if (allDocumnets[0]) {
       res
         .status(200)
         .send({ user: allDocumnets[0], message: "Вход выполнен", status: 200 });
@@ -270,17 +268,21 @@ app.get("/login", async (req, res) => {
   }
 });
 
-app.get("/find_workers_attached_to_clien/:id", async (req, res) => {
+app.get("/workers/:id", async (req, res) => {
   const database = mongoClient.db("lazer");
   const users = database.collection("users");
+
   let foundUsers = users.find({
     added_by: req.params.id,
     role: "worker",
   });
+
+  //console.log("ALL_CUSTOMERS", allCustomers);
   let allDocumnets = [];
   for await (const doc of foundUsers) {
     allDocumnets.push(doc);
   }
+
   res
     .status(200)
     .send({ status: 200, message: "Users found", workers: allDocumnets });
@@ -292,44 +294,19 @@ app.get("/photos/:name", download);
 // TODO ADD EXAMPLE for search
 // FINISH WITH EXAMPLE GET IMAGE
 
-//TODO ADDTO UTILS
-async function isUserExists(collection, payload) {
-  var myDocument = await collection.findOne(payload);
-  console.log("MY_DOCUMENT", myDocument);
-  if (myDocument) {
-    return true;
-  }
-  return false;
-}
-
 app.post("/addUser", async function (req, res) {
   try {
     await uploadFilesMiddleware(req, res);
     const database = mongoClient.db("lazer");
-
     // TODO EXAMPLE ADD INDEX
     database.collection("users").createIndex({ location: 1 });
     const customers = database.collection("users");
-
-    let isDuplicate = await isUserExists(customers, {
-      name: req.body.name,
-      "last-name": req.body["last-name"],
-    });
-
-    if (isDuplicate) {
-      res.status(200).send({
-        status: 200,
-        message: "Пользователь уже существует",
-      });
-      return;
-    }
-
-    let userPayload = req.body;
-    userPayload.photos = req.files.map((el) => el.filename);
-    userPayload.created_at = new Date().getTime();
+    let aa = req.body;
+    aa.photos = req.files.map((el) => el.filename);
 
     // TODO add ref to chunk
-    const result = await customers.insertOne({ ...userPayload });
+    const result = await customers.insertOne({ ...aa });
+    console.log("RESULT ADD USER ", result);
     if (result && result.acknowledged == true) {
       res.status(200).send({
         status: 200,
