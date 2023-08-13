@@ -261,7 +261,7 @@ app.get("/login", async (req, res) => {
     if (curentUser) {
       res
         .status(200)
-        .send({ user: allDocumnets[0], message: "Вход выполнен", status: 200 });
+        .send({ user: curentUser, message: "Вход выполнен", status: 200 });
     } else {
       res.status(400).send({ message: "Пользователь не найден", status: 400 });
     }
