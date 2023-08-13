@@ -17,13 +17,13 @@ app.use(express.static("utils"));
 app.use(express.static("frontend"));
 
 // Enable parsing of URL-encoded data on all routes:
-app.use(
-  express.urlencoded({
-    extended: false, // Whether to use algorithm that can handle non-flat data strutures
-    limit: 10000, // Limit payload size in bytes
-    parameterLimit: 20, // Limit number of form items on payload
-  })
-);
+// app.use(
+//   express.urlencoded({
+//     extended: false, // Whether to use algorithm that can handle non-flat data strutures
+//     limit: 10000, // Limit payload size in bytes
+//     parameterLimit: 20, // Limit number of form items on payload
+//   })
+// );
 //TODO TEST
 //app.use(cors()); // Allows request from any IP (prevent any CORS error)
 
