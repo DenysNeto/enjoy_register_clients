@@ -1,6 +1,5 @@
 window.RedirectionManager = {
   checkUserExists: function (role) {
-    console.log("CHECK_USER_EXISTS_CALLED");
     let user = localStorage.getItem("user");
     if (role && user.role !== role) {
       window.location.href = `/`;

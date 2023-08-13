@@ -142,6 +142,7 @@ Ractive.components["table-c"] = Ractive.extend({
             <coral-buttonlist>
               <button on-click="@this.actionChanged('details' ,  this)" is="coral-buttonlist-item">Подробнее</button>
               <button on-click="@this.actionChanged('edit' , this)" is="coral-buttonlist-item">Pедактировать</button>
+              <button on-click="@this.actionChanged('add_photo' , this)" is="coral-buttonlist-item">Добавить фото</button>
               <button on-click="@this.actionChanged('details' ,  this)" is="coral-buttonlist-item">Добавить сеанс</button>
               <button on-click="@this.actionChanged('delete' ,  this)" is="coral-buttonlist-item">Удалить</button>
             </coral-buttonlist>
@@ -153,6 +154,7 @@ Ractive.components["table-c"] = Ractive.extend({
       </table>`,
 
   actionChanged(action, record) {
+    window.bla = this;
     if (action == "details") {
       // console.log("DETAILS", record);
       this.get("details")(record);
@@ -164,7 +166,10 @@ Ractive.components["table-c"] = Ractive.extend({
       this.get("delete")(record);
     }
     if (action == "add_session") {
-      this.get("add_session")(record);
+      this.get("addSession")(record);
+    }
+    if (action == "add_photo") {
+      this.get("addPhotos")(record);
     }
   },
 });
@@ -173,11 +178,9 @@ Ractive.components["header-c"] = Ractive.extend({
   data: { path: "./" },
   template: `<div style="background-color: white;display: flex;border-bottom: 1px solid;" >
    <div>
-        <img style="height:8vh" src="{{path + 'assets/logo_element_transparent.png'}}">
+        <img style="height:8vh" src="{{path + 'assets/Mediamodifier-Design-Template (2).png'}}">
     </div>
-    <div>
-<img style="height:8vh" src="{{path + 'assets/writting_transparent.png'}}">
-    </div>       
+   
 </div>    
 `,
 });
@@ -204,11 +207,49 @@ Ractive.components["nav-c"] = Ractive.extend({
 });
 
 Ractive.components["card-c"] = Ractive.extend({
-  data: { src: "", description: "", timestamp: "time" },
+  data: { src: "", description: "", timestamp: "time", modalOpened: false },
+  switchModal: function () {
+    console.log("CLICKED!!");
+    //this.set("modalOpened", this.get("modalOpened"));
+    this.set("modalOpened", true);
+  },
+  oncomplete: function () {
+    this.set("modal_id", Math.random().toString(36).slice(-8));
+  },
   template: `      
+
+<!-- MODAL -->
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id={{modal_id}} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img style="width:25vw; height: fit-content; border:1px solid black" src="{{this.src}}">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   <div id="added_photo">
             <div style="display:flex; padding: 10px; border: 1px dashed rgb(150, 150, 150);margin-top:10px;flex-direction: column;justify-content: center;align-items: center;">
              <img style="width:25vw; height: fit-content; border:1px solid black" src="{{this.src}}">
+             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{modal_id}}">
+                Launch demo modal
+              </button>
+             
              <div style="padding:1rem">
                     <label for="fieldLabelExample2-lifestory" class="coral-FormGroup-itemLabel coral-FieldLabel--left">Комментарии к фото:  </label>
                     <textarea  style="width:100%;resize: none;" rows=4 id="fieldLabelExample2-lifestory" placeholder="Комментарий..." value={{this.description}}  is="coral-textarea"></textarea>

@@ -25,10 +25,8 @@
             integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
             crossorigin="anonymous"></script>
 
-
     <script src="../utils/components.js"></script>
     <script src="../utils/redirectionManager.js"></script>
-
 
 </head>
 
@@ -45,8 +43,6 @@
 
         let path = window.location.pathname;
         path = path.replace("_render", "");
-        console.log("PATH", path)
-
         fetch(path,
             {
                 method: "GET",
@@ -95,10 +91,11 @@
     <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
       <div class="accordion-body">
             {{#each personal }}
+            {{#if !fieldsToIgnore.includes(this.key)}}
                     <div class="coral-Well">
                         <div style="display:flex">
                             <div style="width:50%">
-                                {{this.key}}
+                                {{ filedsAlias[this.key] || this.key }}
                             </div>
                             <div>
                                 {{#if Array.isArray(this.value)}}
@@ -106,12 +103,16 @@
                                     <coral-tag color="green">{{this}}</coral-tag>
                                     {{/each}}
                                 {{else}}
+                                {{#if this.key.includes("ref")}}
+                                    <a href={{this.value}}>{{this.value}}</a>
+                                {{else}}
                                     {{this.value}}
+                                {{/if}}    
                                 {{/if}}
-                              
                             </div>
                         </div>
                     </div>
+            {{/if}}        
             {{/each}}
       </div>
     </div>
@@ -147,17 +148,16 @@
       </div>
     </div>
   </div>
-
 </div>
-       
         `,
-            data: { photos: [] ,  personal : [] , dataFull : {} }
-        });
+  data: { photos: [] ,  personal : [] , dataFull : {} , fieldsToIgnore : ["role","company","status","metadata_photo"] ,  filedsAlias : {name : "Имя" ,  'last-name' : "Фамилия" , 'phone-number' : "Номер телефона" , 
+  procedures : "Процедуры" , workers : "Мастера" ,  'added_by' : "Кем добавлено"  } }
+})
 
 
 
 
-    </script>
+   </script>
 
 </body>
 

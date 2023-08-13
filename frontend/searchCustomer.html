@@ -125,8 +125,13 @@ function detailsCustomer(record) {
 
 function addSession(record) {
         console.log("add_session", record);
-        window.location.href = `/add_customer_session/${record._id}`;
+        window.location.href = `/add_customer_session_render/${record._id}`;
     } 
+
+    function addPhotos(record) {
+            console.log("add_photos", record);
+            window.location.href = `/add_customer_photo_render/${record._id}`;
+        } 
 
 
         var ractive = Ractive({
@@ -135,13 +140,13 @@ function addSession(record) {
         <header-c/>
         <nav-c/>
         {{#if customers.length > 0}}
-            <table-c  rows={{customers}}  columns="{{tableRows}}" edit="{{edit}}" delete="{{delete}}" details="{{details}}" />
+            <table-c  rows={{customers}}  columns="{{tableRows}}" edit="{{edit}}" delete="{{delete}}" details="{{details}}" addPhotos="{{addPhotos}}" addSession="{{addSession}}" />
         {{else}}
-        No customers yet.  You want to add?     
+        No customers yet. You want to add?      
         {{/if}}
         <coral-toast id="defaultToast">{{notificationMessage}}</coral-toast>
         `,
-            data: { customers: [], tableRows: [{ title: "name" ,  rowsTemplate: "{{name}}  {{row['last-name']}}" }  ]  ,  notificationMessage:"" ,  edit: editCustomer ,  delete: deleteCustomer , details: detailsCustomer , addSession : addSession  }
+            data: { customers: [], tableRows: [{ title: "name" ,  rowsTemplate: "{{name}}  {{row['last-name']}}" }  ]  ,  notificationMessage:"" ,  edit: editCustomer ,  delete: deleteCustomer , details: detailsCustomer , addSession : addSession , addPhotos : addPhotos  }
         });
 
 

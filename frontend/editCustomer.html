@@ -259,7 +259,7 @@
                                 console.log("ON_COMPLETE" , this.get("user"))
                                   if (this.get("user").role == "owner") {
                                     let id = this.get("user")._id
-                                    fetch(`/workers/${id}`,
+                                    fetch(`/find_workers_attached_to_clien/${id}`,
                                         {
                                             method: "GET",
                                             headers: {},
