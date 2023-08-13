@@ -7,9 +7,9 @@ console.log("HERE", __dirname);
 
 // app.use(bodyParser.json({ extended: true }));
 
-app.use(express.static(__dirname));
-app.use(express.static("assets"));
-app.use(express.static("utils"));
+// app.use(express.static(__dirname));
+// app.use(express.static("assets"));
+// app.use(express.static("utils"));
 app.use(express.static("frontend"));
 
 app.get("/", (req, res) => {
