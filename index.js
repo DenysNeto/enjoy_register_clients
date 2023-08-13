@@ -6,7 +6,7 @@ app.use(express.json());
 console.log("HERE");
 
 // app.use(bodyParser.json({ extended: true }));
-app.listen(port);
+
 app.use(express.static(__dirname));
 app.use(express.static("assets"));
 app.use(express.static("utils"));
