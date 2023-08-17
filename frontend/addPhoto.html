@@ -57,8 +57,6 @@
 
 </head>
 <body class="coral--light" >
-    HHHHHHHHHHHHHHH
-
     <div id="target" ></div>
     <!-- BUILD RACTIVE-->
     <script>
@@ -73,12 +71,13 @@
                      <coral-toast id="addPhotoToast"></coral-toast>
                      <div>
                       <!--  qq {{@global.files.get().files.length}} -->
-                    <button style=" margin-top:1rem" type="button" is="coral-button"  on-click="@this.addSubmit()">Добавит фото</button> 
+                    <button style=" margin-top:1rem" type="button" is="coral-button"  on-click="@this.addSubmit()">Добавить фото</button> 
                     </div>
+                      <coral-toast id="addPhotoToast">A</coral-toast>
 
             `,
                 data: { customer: {} },
-                addSubmit: function () {
+                addSubmit:async function () {
                     let formData = new FormData();
                     let descriptions = {}
                     if (window.files && window.files.get().files && window.files.get().files.length) {
@@ -90,11 +89,11 @@
                     allFiles.forEach(el => formData.append("files", el))
                     formData.append("metadata_photo", JSON.stringify(descriptions));
 
-                    let result =  window.ApiManager.putCustomerPhoto(this.get("customer._id"), formData)
+                    let result = await window.ApiManager.putCustomerPhoto(this.get("customer._id"), formData)
 
 
 
-                    document.getElementById("addPhotoToast").querySelector("coral-toast-content").innerText = data.message;
+                    document.getElementById("addPhotoToast").querySelector("coral-toast-content").innerText = result.message;
                     document.getElementById("addPhotoToast").show()
 
 

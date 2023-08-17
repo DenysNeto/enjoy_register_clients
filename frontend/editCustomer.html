@@ -188,6 +188,17 @@
 
             </coral-select>
 
+
+                <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Тип клиента:</label>
+            <coral-select multiple="" name="client_type">
+                <coral-select-item value="client">
+                    Клиент
+                </coral-select-item>
+                <coral-select-item value="model">
+                    Модель
+                </coral-select-item>
+            </coral-select>
+
   
 
         <!--DESCRIPTION-->
@@ -223,7 +234,8 @@
                                         "phone-number": { type: ["string", "null"] },
                                         "date-of-birth": { type: ["string", "null"] },
                                         "procedures": { type: ["string", "array"], enum: ["eyelashes", "laser_epilation" , "electrolysis" ] },
-                                        "description": { type: "string" }
+                                        "description": { type: "string" },
+                                        "client_type": { type: ["string", "array"], enum: ["client", "model"] },
                                     },
                                     required: ["name", "last-name", "procedures"],
                                     additionalProperties: true
@@ -259,7 +271,7 @@
                                 console.log("ON_COMPLETE" , this.get("user"))
                                   if (this.get("user").role == "owner") {
                                     let id = this.get("user")._id
-                                    fetch(`/find_workers_attached_to_clien/${id}`,
+                                    fetch(`/find_workers_attached_to_client/${id}`,
                                         {
                                             method: "GET",
                                             headers: {},

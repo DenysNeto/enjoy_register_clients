@@ -149,7 +149,7 @@
         <div id="worker" class="coral-FormGroup-item"></div>
 
         <!-- AUTOCOMPLETE LIST OF PROCEDURES-->
-    
+ 
             <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Список процедур:</label>
             <coral-select multiple="" name="procedures">
             <coral-select-item value="eyelashes">
@@ -163,6 +163,17 @@
             </coral-select-item>
             </coral-select>
 
+        <div class="coral-FormGroup-item">
+            <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Тип клиента:</label>
+            <coral-select multiple="" name="client_type">
+                <coral-select-item value="client">
+                    Клиент
+                </coral-select-item>
+                <coral-select-item value="model">
+                    Модель
+                </coral-select-item>
+            </coral-select>
+</div>
         <!--DESCRIPTION-->
         <div class="coral-FormGroup-item">
             <label for="fieldLabelExample2-lifestory" class="coral-FormGroup-itemLabel coral-FieldLabel--left">Доп информация о клиенте :  </label>
@@ -205,14 +216,14 @@
 
         var inputWorker  = Ractive({
                 target: "#worker",
-                data : {options : [{name : "HHH" , _id:"111qqqq"  } ,  { name: "BBB", _id: "222qqqq" }] ,   user: JSON.parse(localStorage.getItem("user"))   },
+                data : {options : [] ,   user: JSON.parse(localStorage.getItem("user"))   },
                 template: ` 
                 {{#if user.role=="owner"}}
                 <label class="coral-FormGroup-itemLabel coral-FieldLabel--left" for="fieldLabelExample2-emailaddress">Работники:</label>
                 <coral-select multiple="" name="workers">
                 {{#each options}}
                     <coral-select-item value={{this._id}}>
-                        {{this.name}}
+                        {{this.name}} {{this['last-name']}}
                     </coral-select-item>
                 {{/each}}
                 </coral-select>
@@ -222,7 +233,7 @@
                         if(this.get("user").role == "owner")
                         {
                             let id = JSON.parse(localStorage.getItem("user"))._id
-                            fetch(`/workers/${id}`,
+                            fetch(`/find_workers_attached_to_client/${id}`,
                                 {
                                     method: "GET",
                                     headers: {},
@@ -273,9 +284,10 @@
                     "phone-number": { type: ["string", "null"] },
                     "date-of-birth": { type: ["string", "null"] },
                     "procedures": { type: ["string", "array"], enum: ["eyelashes", "laser_epilation" ,  "electrolysis"] },
+                    "client_type" : { type: ["string", "array"], enum: ["client","model"] },
                     "description": { type: "string" }
                 },
-                required: ["name", "last-name", "procedures"],
+                required: ["name", "last-name", "procedures" , "client_type"],
                 additionalProperties: true
             }
       

@@ -264,9 +264,10 @@ Ractive.components["card-c"] = Ractive.extend({
              <button style="width:50%" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{modal_id}}">
                 Увеличить
               </button>
-              <button style="width:50%" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#{{modal_id + '_delete'}}">
+              <!-- TODO FINISH -->
+             <!--  <button style="width:50%" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#{{modal_id + '_delete'}}">
                 Удалить
-              </button>
+              </button> -->
              
              <div style="padding:1rem">
                     <label for="fieldLabelExample2-lifestory" class="coral-FormGroup-itemLabel coral-FieldLabel--left">Комментарии к фото:  </label>

@@ -63,12 +63,19 @@
                 Object.keys(data).forEach(key=>{
                     if(key != "photos" && key != "_id" && data[key] !== "")
                     {
+                      if(key == 'created_at' )
+                      {
+                         let date = new Date(data[key])
+                        data[key] =  `${date.getDay()}.${date.getMonth()}.${date.getFullYear()}`
+                      }
                         personal.push({key : key ,  value : data[key]})
                     }
                 })
 
+           
+
                 ractive.set("photos", photos)
-                ractive.set("personal"  ,  personal )
+                ractive.set("personal", personal )
                 ractive.set("dataFull", data)
             
             });
@@ -100,13 +107,13 @@
                             <div>
                                 {{#if Array.isArray(this.value)}}
                                     {{#each this.value}}
-                                    <coral-tag color="green">{{this}}</coral-tag>
+                                    <coral-tag color="green">{{filedsAlias[this] || this}}</coral-tag>
                                     {{/each}}
                                 {{else}}
                                 {{#if this.key.includes("ref")}}
                                     <a href={{this.value}}>{{this.value}}</a>
                                 {{else}}
-                                    {{this.value}}
+                                    {{ filedsAlias[this.value] || this.value }}
                                 {{/if}}    
                                 {{/if}}
                             </div>
@@ -151,7 +158,7 @@
 </div>
         `,
   data: { photos: [] ,  personal : [] , dataFull : {} , fieldsToIgnore : ["role","company","status","metadata_photo"] ,  filedsAlias : {name : "Имя" ,  'last-name' : "Фамилия" , 'phone-number' : "Номер телефона" , 
-  procedures : "Процедуры" , workers : "Мастера" ,  'added_by' : "Кем добавлено"  } }
+  procedures : "Процедуры" , workers : "Мастера" ,  'added_by' : "Кем добавлено"  ,  "client_type" : "Тип клиента" ,  "eyelashes" : "Peсницы" , "laser_epilation" : "Лазерная эпиляция" ,  "electrolysis" : "Электроэпиляция" ,  client : "Клиент" ,  model : "Модель" ,  created_at : "Клиент добавлен" } }
 })
 
 

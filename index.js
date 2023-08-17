@@ -183,8 +183,12 @@ app.get("/customer/:id", async (req, res) => {
   let curentCustomer = await getById(customers, req.params.id);
   let addedBy = await getById(customers, curentCustomer.added_by);
   let workers = await getById(customers, curentCustomer.workers);
-  curentCustomer.added_by = `${addedBy.name} ${addedBy["last-name"]}`;
-  curentCustomer.workers = `${workers.name} ${workers["last-name"]}`;
+  curentCustomer.added_by = `${addedBy.name} ${addedBy["last-name"] || ""}`;
+  if (!workers) {
+    curentCustomer.workers = `${addedBy.name} ${addedBy["last-name"] || ""}`;
+  } else {
+    curentCustomer.workers = `${workers.name} ${workers["last-name"] || ""}`;
+  }
 
   if (!curentCustomer) {
     res.status(400).send({ message: "Клиент не нейден!", status: 400 });
@@ -271,7 +275,7 @@ app.get("/login", async (req, res) => {
   }
 });
 
-app.get("/find_workers_attached_to_clien/:id", async (req, res) => {
+app.get("/find_workers_attached_to_client/:id", async (req, res) => {
   const database = mongoClient.db("lazer");
   const users = database.collection("users");
   let foundUsers = users.find({
@@ -330,10 +334,10 @@ app.post("/addUser", async function (req, res) {
     // TODO EXAMPLE ADD INDEX
     database.collection("users").createIndex({ location: 1 });
     const customers = database.collection("users");
-
     let isDuplicate = await isUserExists(customers, {
       name: req.body.name,
       "last-name": req.body["last-name"],
+      role: req.body["role"],
     });
 
     if (isDuplicate) {
