@@ -255,9 +255,10 @@ app.get("/customers", async (req, res) => {
 app.get("/login", async (req, res) => {
   try {
     let obj = req.query;
+    console.log("OBJ", obj);
     const database = mongoClient.db("lazer");
     const users = database.collection("users");
-    let curentUser = users.findOne(obj);
+    let curentUser = await users.findOne(obj);
     if (curentUser) {
       res
         .status(200)
@@ -288,6 +289,25 @@ app.get("/find_workers_attached_to_clien/:id", async (req, res) => {
 
 //
 app.get("/photos/:name", download);
+
+app.delete("/photos/:id", async (req, res) => {
+  return;
+  const database = mongoClient.db("lazer");
+  let id = req.params.id;
+  // const users = database.collection("users");
+  const bucket = new GridFSBucket(database, {
+    bucketName: dbConfig.imgBucket,
+  });
+
+  // DELETE PHOTO
+  bucket.delete(new ObjectId(id));
+
+  console.log("BLA");
+  const cursor = bucket.find({ filename: "d1d1a977a1184" });
+  for await (const doc of cursor) {
+    console.log(doc._id);
+  }
+});
 
 // TODO ADD EXAMPLE for search
 // FINISH WITH EXAMPLE GET IMAGE

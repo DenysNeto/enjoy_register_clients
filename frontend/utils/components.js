@@ -223,31 +223,49 @@ Ractive.components["card-c"] = Ractive.extend({
 <!-- Button trigger modal -->
 
 
-<!-- Modal -->
-<div class="modal fade" id={{modal_id}} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!-- Modal FULL SCREEN -->
+<div class="modal fade modal-xl" id={{modal_id}} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
       <div class="modal-body">
-        <img style="width:25vw; height: fit-content; border:1px solid black" src="{{this.src}}">
+        <img style="width:100%; height: fit-content; border:1px solid black" src="{{this.src}}">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+       <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DELETE -->
+<div class="modal fade modal-xl" id={{modal_id +  "_delete"}} tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+          <div class="modal-header">
+          <h5 class="modal-title" >Вы уверены что хотите удалить данное фото ?  </h5> 
+      </div>
+      <div class="modal-body">
+        <img style="width:100%; height: fit-content; border:1px solid black" src="{{this.src}}">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary" on-click="@this.deletePhoto()" >Удалить</button> 
       </div>
     </div>
   </div>
 </div>
 
 
+
   <div id="added_photo">
             <div style="display:flex; padding: 10px; border: 1px dashed rgb(150, 150, 150);margin-top:10px;flex-direction: column;justify-content: center;align-items: center;">
-             <img style="width:25vw; height: fit-content; border:1px solid black" src="{{this.src}}">
-             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{modal_id}}">
-                Launch demo modal
+            <img style="width:50%; height: fit-content; border:1px solid black" src="{{this.src}}">
+             <button style="width:50%" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#{{modal_id}}">
+                Увеличить
+              </button>
+              <button style="width:50%" type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#{{modal_id + '_delete'}}">
+                Удалить
               </button>
              
              <div style="padding:1rem">
